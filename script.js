@@ -1,16 +1,8 @@
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
-let x = canvas.width / 2;
-let y = canvas.height - 30;
-let dx = -4;
-let dy = -2;
 const ballRadius = 10;
-let ballColor = '#0095DD';
 const paddleHeight = 10;
 const paddleWidth = 70;
-let paddleX = (canvas.width - paddleWidth) / 2;
-let rightPressed = false;
-let leftPressed = false;
 const brickRowCount = 5;
 const brickColumnCount = 5;
 const brickWidth = 75;
@@ -18,9 +10,17 @@ const brickHeight = 20;
 const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
+const bricks = [];
 let score = 0;
 let lives = 5;
-const bricks = [];
+let x = canvas.width / 2;
+let y = canvas.height - 30;
+let dx = -4;
+let dy = -2;
+let ballColor = '#0095DD';
+let paddleX = (canvas.width - paddleWidth) / 2;
+let rightPressed = false;
+let leftPressed = false;
 for (let c = 0; c < brickColumnCount; c += 1) {
   bricks[c] = [];
   for (let r = 0; r < brickRowCount; r += 1) {
