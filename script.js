@@ -21,10 +21,11 @@ let ballColor = '#0095DD';
 let paddleX = (canvas.width - paddleWidth) / 2;
 let rightPressed = false;
 let leftPressed = false;
-for (let c = 0; c < brickColumnCount; c += 1) {
-  bricks[c] = [];
-  for (let r = 0; r < brickRowCount; r += 1) {
-    bricks[c][r] = { x: 0, y: 0, status: 1 };
+
+for (let column = 0; column < brickColumnCount; column += 1) {
+  bricks[column] = [];
+  for (let row = 0; row < brickRowCount; row += 1) {
+    bricks[column][row] = { x: 0, y: 0, status: 1 };
   }
 }
 
@@ -133,6 +134,8 @@ function drawScore() {
   ctx.fillText(`Score: ${score}`, 8, 20);
 }
 
+// handles whether the ball bounces or if the player loses a life
+// if the player loses a life, checks for game over
 function wallBounce() {
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
     dx = -dx;
