@@ -22,6 +22,107 @@ let paddleX = (canvas.width - paddleWidth) / 2;
 let rightPressed = false;
 let leftPressed = false;
 
+class Sprite {
+  constructor(x, y, color, width, height) {
+    this.x = x
+    this.y = y
+    this.color = color
+    this.width = width
+    this.height = height
+  }
+
+  moveTo(x, y) {
+    this.x = x
+    this.y = y
+  }
+
+  moveBy(dx, dy) {
+    this.x += dx
+    this.y += dy
+  }
+
+  render(ctx) {
+    ctx.beginPath();
+    ctx.rect(this.x, this.y, this.width, this.height);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+
+class Ball extends Sprite {
+  constructor(radius, x, y) {
+    // Must pass params to super when extending a class!
+    
+    this.radius = radius;
+    super(x, y)
+  }
+
+  render(ctx) {
+    // Draw a ball as circle
+  }
+}
+
+class Brick extends Sprite {
+  constructor(x, y, color = "red", width = 0, height = 0) {
+    // Must pass params to super when extending a class!
+    super(x, y, color, width, height)
+    this.status = 1;
+  }
+}
+
+class Paddle extends Sprite {
+  constructor(radius, x, y) {
+    // Must pass params to super when extending a class!
+    super(x, y)
+  }
+
+  render(ctx) {
+    ctx.beginPath();
+    ctx.rect(this.x, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+    ctx.fillStyle = '#0095DD';
+    ctx.fill();
+    ctx.closePath();
+  }
+
+}
+
+class Lives extends Sprite {
+  constructor(radius, x, y) {
+    // Must pass params to super when extending a class!
+    super(x, y)
+    this.radius = radius;
+  }
+
+  render() {
+    ...
+  }
+}
+
+class Score extends Sprite {
+  constructor(radius, x, y) {
+    // Must pass params to super when extending a class!
+    super(x, y)
+    this.radius = radius;
+  }
+
+  render() {
+    ...
+  }
+}
+
+class Label {
+  constructor(font, text, align) {
+    font.style = "Helvetica 16px"
+    text.display = "Hello World"
+    align.style.textAlign = "left"
+  }
+
+  render(ctx){
+
+  }
+}
+
 for (let column = 0; column < brickColumnCount; column += 1) {
   bricks[column] = [];
   for (let row = 0; row < brickRowCount; row += 1) {
