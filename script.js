@@ -9,10 +9,9 @@ const brickColumnCount = 5;
 const brickWidth = 75;
 const brickHeight = 20;
 const bricks = [];
-let score = 0;
-let lives = 5;
 let ballColor = '#0095DD';
 let paddleX = (canvas.width - paddleWidth) / 2; */
+
 let rightPressed = false;
 let leftPressed = false;
 
@@ -92,13 +91,16 @@ class GameLabel extends Sprite {
     this.font = font;
   }
 
-  render(ctx) {
+  render() {
     ctx.font = this.font;
     ctx.textAlign = this.align;
     ctx.fillStyle = this.color;
-    ctx.fillText(`Score: ${score}`, 8, 20);
+    ctx.fillText(this.text, 8, 20);
   }
 }
+
+const scoreLabel = new GameLabel(10, 30, 'Score: 0');
+const lifeLabel = new GameLabel(90, 90, 'Lives: 999');
 
 class Bricks {
   constructor(rows = 3, cols = 5) {
@@ -206,8 +208,8 @@ function wallBounce() {
     ball.dy = -ball.dy;
     ball.color = getRandomColor();
   } else if (ball.y + ball.dy > canvas.height - ball.radius) {
-    if (x > paddleX && x < paddleX + paddleWidth) {
-      dy = -dy;
+    if (ball.x > paddleX && ball.x < paddleX + paddleWidth) {
+      ball.dy = -ball.dy;
     } else {
       lives -= 1;
       if (!lives) {
@@ -215,22 +217,23 @@ function wallBounce() {
         alert('GAME OVER');
         document.location.reload();
       } else {
-        x = canvas.width / 2;
-        y = canvas.height - 30;
-        dx = 2;
-        dy = -2;
+        ball.x = canvas.width / 2;
+        ball.y = canvas.height - 30;
+        ball.dx = 2;
+        ball.dy = -2;
         paddleX = (canvas.width - paddleWidth) / 2;
       }
     }
   }
 } 
 
-
 function draw() {
 // drawing code
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ball.moveTo(ball.x, ball.y);
   ball.render();
+  scoreLabel.render();
+  lifeLabel.render();
   /* collisionDetection();
   drawBricks();
   if (rightPressed) {
