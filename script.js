@@ -1,47 +1,41 @@
+/* eslint-disable max-classes-per-file */
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
-const ballRadius = 10;
+/* const ballRadius = 10;
 const paddleHeight = 10;
 const paddleWidth = 70;
 const brickRowCount = 5;
 const brickColumnCount = 5;
 const brickWidth = 75;
 const brickHeight = 20;
-const brickPadding = 10;
-const brickOffsetTop = 30;
-const brickOffsetLeft = 30;
 const bricks = [];
 let score = 0;
 let lives = 5;
-let x = canvas.width / 2;
-let y = canvas.height - 30;
-let dx = -4;
-let dy = -2;
 let ballColor = '#0095DD';
-let paddleX = (canvas.width - paddleWidth) / 2;
+let paddleX = (canvas.width - paddleWidth) / 2; */
 let rightPressed = false;
 let leftPressed = false;
 
 class Sprite {
-  constructor(x, y, color, width, height) {
-    this.x = x
-    this.y = y
-    this.color = color
-    this.width = width
-    this.height = height
+  constructor(x, y, width, height, color) {
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.width = width;
+    this.height = height;
   }
 
   moveTo(x, y) {
-    this.x = x
-    this.y = y
+    this.x = x;
+    this.y = y;
   }
 
   moveBy(dx, dy) {
-    this.x += dx
-    this.y += dy
+    this.x += dx;
+    this.y += dy;
   }
 
-  render(ctx) {
+  render() {
     ctx.beginPath();
     ctx.rect(this.x, this.y, this.width, this.height);
     ctx.fillStyle = this.color;
@@ -51,30 +45,35 @@ class Sprite {
 }
 
 class Ball extends Sprite {
-  constructor(radius, x, y) {
+  constructor(x, y, radius, color) {
     // Must pass params to super when extending a class!
-    
+    super(x, y, radius * 2, radius * 2, color);
     this.radius = radius;
-    super(x, y)
+    this.dx = 2;
+    this.dy = -2;
   }
 
-  render(ctx) {
-    // Draw a ball as circle
+  render() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.closePath();
   }
 }
 
 class Brick extends Sprite {
-  constructor(x, y, color = "red", width = 0, height = 0) {
+  constructor(x, y, color = 'red', width = 0, height = 0) {
     // Must pass params to super when extending a class!
-    super(x, y, color, width, height)
+    super(x, y, color, width, height);
     this.status = 1;
   }
 }
 
 class Paddle extends Sprite {
-  constructor(radius, x, y) {
+  constructor(x, y) {
     // Must pass params to super when extending a class!
-    super(x, y)
+    super(x, y);
   }
 
   render(ctx) {
@@ -84,49 +83,51 @@ class Paddle extends Sprite {
     ctx.fill();
     ctx.closePath();
   }
-
 }
-
-class Lives extends Sprite {
-  constructor(radius, x, y) {
-    // Must pass params to super when extending a class!
-    super(x, y)
-    this.radius = radius;
+class GameLabel extends Sprite {
+  constructor(x, y, text, font = '16px Helvetica', color = 'red', align = 'left') {
+    super(x, y, color);
+    this.align = align;
+    this.text = text;
+    this.font = font;
   }
 
-  render() {
-    ...
-  }
-}
-
-class Score extends Sprite {
-  constructor(radius, x, y) {
-    // Must pass params to super when extending a class!
-    super(x, y)
-    this.radius = radius;
-  }
-
-  render() {
-    ...
+  render(ctx) {
+    ctx.font = this.font;
+    ctx.textAlign = this.align;
+    ctx.fillStyle = this.color;
+    ctx.fillText(`Score: ${score}`, 8, 20);
   }
 }
 
-class Label {
-  constructor(font, text, align) {
-    font.style = "Helvetica 16px"
-    text.display = "Hello World"
-    align.style.textAlign = "left"
+class Bricks {
+  constructor(rows = 3, cols = 5) {
+    this.rows = rows;
+    this.cols = cols;
+    this.bricks = [];
+    this.setup();
   }
 
-  render(ctx){
-
+  setup() {
+    for (let c = 0; c < this.cols; c += 1) {
+      this.bricks[c] = [];
+      for (let r = o; r < this.rows; r += 1) {
+        const brick = new Brick();
+        brick.x = (c * (brick.width + 10)) + 30;
+        brick.y = (r * (brick.height + 10)) + 30;
+        this.bricks[c][r] = brick;
+      }
+    }
   }
-}
 
-for (let column = 0; column < brickColumnCount; column += 1) {
-  bricks[column] = [];
-  for (let row = 0; row < brickRowCount; row += 1) {
-    bricks[column][row] = { x: 0, y: 0, status: 1 };
+  render(ctx) {
+    for (let c = 0; c < this.cols; c += 1) {
+      for (let r = 0; r < this.rows; r += 1) {
+        if (this.bricks[c][r].status === 1) {
+          this.bricks[c][r].render(ctx);
+        }
+      }
+    }
   }
 }
 
@@ -148,7 +149,7 @@ function keyUpHandler(e) {
   }
 }
 
-function mouseMoveHandler(e) {
+/* function mouseMoveHandler(e) {
   const relativeX = e.clientX - canvas.offsetLeft;
   if (relativeX > 0 && relativeX < canvas.width) {
     paddleX = relativeX - paddleWidth / 2;
@@ -158,46 +159,12 @@ function mouseMoveHandler(e) {
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 document.addEventListener('mousemove', mouseMoveHandler, false);
-
-function drawBall() {
-  ctx.beginPath();
-  ctx.arc(x, y, ballRadius, 0, Math.PI * 3);
-  ctx.fillStyle = ballColor;
-  ctx.fill();
-  ctx.closePath();
-}
-
-function drawPaddle() {
-  ctx.beginPath();
-  ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = '#0095DD';
-  ctx.fill();
-  ctx.closePath();
-}
-
-function drawBricks() {
-  for (let c = 0; c < brickColumnCount; c += 1) {
-    for (let r = 0; r < brickRowCount; r += 1) {
-      if (bricks[c][r].status === 1) {
-        const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
-        const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
-        bricks[c][r].x = brickX;
-        bricks[c][r].y = brickY;
-        ctx.beginPath();
-        ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = '#0095DD';
-        ctx.fill();
-        ctx.closePath();
-      }
-    }
-  }
-}
-
-function drawLives() {
+ */
+/* function drawLives() {
   ctx.font = '16px Arial';
   ctx.fillStyle = '#0095DD';
   ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
-}
+} */
 
 function getRandomColor() {
   const letters = '0123456789ABCDEF';
@@ -208,7 +175,7 @@ function getRandomColor() {
   return color;
 }
 
-function collisionDetection() {
+/* function collisionDetection() {
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
       const b = bricks[c][r];
@@ -227,25 +194,18 @@ function collisionDetection() {
       }
     }
   }
-}
+} */
 
-function drawScore() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = '#0095DD';
-  ctx.fillText(`Score: ${score}`, 8, 20);
-}
-
-// handles whether the ball bounces or if the player loses a life
-// if the player loses a life, checks for game over
+const ball = new Ball(100, 300, 10, 'orange');
 function wallBounce() {
-  if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-    dx = -dx;
-    ballColor = getRandomColor();
+  if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
+    ball.dx = -ball.dx;
+    ball.color = getRandomColor();
   }
-  if (y + dy < ballRadius) {
-    dy = -dy;
-    ballColor = getRandomColor();
-  } else if (y + dy > canvas.height - ballRadius) {
+  if (ball.y + ball.dy < ball.radius) {
+    ball.dy = -ball.dy;
+    ball.color = getRandomColor();
+  } else if (ball.y + ball.dy > canvas.height - ball.radius) {
     if (x > paddleX && x < paddleX + paddleWidth) {
       dy = -dy;
     } else {
@@ -263,18 +223,16 @@ function wallBounce() {
       }
     }
   }
-}
+} 
+
 
 function draw() {
 // drawing code
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawBall();
-  drawPaddle();
-  drawScore();
-  drawLives();
-  collisionDetection();
+  ball.moveTo(ball.x, ball.y);
+  ball.render();
+  /* collisionDetection();
   drawBricks();
-  wallBounce();
   if (rightPressed) {
     paddleX += 4;
     if (paddleX + paddleWidth > canvas.width) {
@@ -285,9 +243,9 @@ function draw() {
     if (paddleX < 0) {
       paddleX = 0;
     }
-  }
-  x += dx;
-  y += dy;
+  } */
+  ball.x += ball.dx;
+  ball.y += ball.dy;
 
   requestAnimationFrame(draw);
 }
