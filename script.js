@@ -107,7 +107,7 @@ const scoreLabel = new GameLabel(10, 30, 'Score: 0');
 const lifeLabel = new GameLabel(10, 50, `Lives: ${lives}`);
 
 class Bricks {
-  constructor(rows = 3, cols = 5) {
+  constructor(rows = 5, cols = 5) {
     this.rows = rows;
     this.cols = cols;
     this.bricks = [];
@@ -167,12 +167,6 @@ document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 document.addEventListener('mousemove', mouseMoveHandler, false);
 
-/* function drawLives() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = '#0095DD';
-  ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
-} */
-
 function getRandomColor() {
   const letters = '0123456789ABCDEF';
   let color = '#';
@@ -231,7 +225,7 @@ function wallBounce() {
   }
 }
 
-const someBrick = new Brick(15, 30, 'fuchsia', 75, 20);
+const someBricks = new Bricks(5, 5);
 function draw() {
 // drawing code
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -239,7 +233,7 @@ function draw() {
   ball.render();
   scoreLabel.render(ctx);
   lifeLabel.render(ctx);
-  someBrick.render(ctx);
+  someBricks.render(ctx);
   gamePaddle.render(ctx);
   wallBounce();
   if (rightPressed) {
